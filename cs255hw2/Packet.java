@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cs255hw2;
 
-import java.util.zip.Adler32;
+import java.util.zip.*;
 import java.nio.*;
 
 /**
@@ -18,17 +13,28 @@ public class Packet {
     private byte[] srcPortNum;
     private byte[] desPortNum;
     private byte[] dataLength;
-    private byte[] payload;
+    private byte[] payload = new byte[1004];
     
-    public Packet(byte[] seqNum, byte[] checksum, byte[] srcPortNum, byte[] desPortNum, byte[] dataLength, byte[] payload){
-        Adler32 checkSum = new Adler32();
-           checkSum.update(payload);
-           
-        this.seqNum = seqNum;
-        //this.checksum = ;
-        this.desPortNum = desPortNum;
+    public Packet(int seqNum, int srcPortNum, int desPortNum, int dataLength, byte[] payload){
+        CRC32 checkSum = new CRC32();
+        checkSum.update(payload);
+        
+        fillPacket(seqNum, this.seqNum);
+        fillPacket( 0, this.checksum);
+        fillPacket(srcPortNum, this.srcPortNum);
+        fillPacket(desPortNum, this.desPortNum);
+        fillPacket(dataLength, this.dataLength);
         this.payload = payload;
-        this.dataLength = dataLength;
-        this.srcPortNum = srcPortNum;
+        
+    }
+    
+    public void fillPacket(int toFill, byte[] target){
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        //converts the int and puts it into the buffer
+        buffer.putInt(toFill);
+        buffer.flip();
+        //puts the buffer and puts it into the target array
+        buffer.get(target);
+        buffer.flip();
     }
 }
