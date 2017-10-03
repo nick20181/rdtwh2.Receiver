@@ -1,6 +1,5 @@
 package cs255hw2.Sender;
 
-import cs255hw2.*;
 import java.util.zip.*;
 import java.nio.*;
 
