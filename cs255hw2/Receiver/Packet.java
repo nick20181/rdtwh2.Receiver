@@ -50,16 +50,4 @@ public class Packet {
         target = buffer.getInt();
     }
 
-    public byte[] fillPacket(int toFill) {
-        byte[] toReturn = new byte[4];
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        //converts the int and puts it into the buffer
-        buffer.putInt(toFill);
-        buffer.flip();
-        //puts the buffer and puts it into the target array
-        buffer.get(toReturn);
-        buffer.flip();
-
-        return toReturn;
-    }
 }
