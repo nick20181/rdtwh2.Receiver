@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package cs255hw2.Sender;
 
 import java.io.*;
@@ -22,7 +18,7 @@ public class SenderClient {
 
     public SenderClient() {
         try {
-            this.currentSocket = new Socket("10.100.1.239", 1000);
+            this.currentSocket = new Socket("10.15.1.21", 4466);
             this.incoming = new DataInputStream(this.currentSocket.getInputStream());
             this.outGoing = new PrintStream(this.currentSocket.getOutputStream());
             InputStreamReader ir = new InputStreamReader(this.currentSocket.getInputStream());
