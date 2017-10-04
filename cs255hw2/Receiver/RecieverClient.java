@@ -1,29 +1,41 @@
 package cs255hw2.Receiver;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
+import java.io.*;
 
-import javax.swing.JOptionPane;
+import java.net.*;
 
-/**
- * Trivial client for the date server.
- */
+
 public class RecieverClient {
 
-    /**
-     * Runs the client as an application. First it displays a dialog box asking
-     * for the IP address or hostname of a host running the date server, then
-     * connects to it and displays the date that it serves.
-     */
-    public static void main(String[] args) throws IOException {
+
+    private Socket currentSocket;
+    private DataInputStream incoming;
+    private PrintStream outGoing;
+    
+
+    public RecieverClient() {
+        try {
+            this.currentSocket = new Socket("10.15.1.21", 4467);
+            this.incoming = new DataInputStream(this.currentSocket.getInputStream());
+            this.outGoing = new PrintStream(this.currentSocket.getOutputStream());
+            InputStreamReader ir = new InputStreamReader(this.currentSocket.getInputStream());
+        } catch (UnknownHostException e) {
+            // System.out.println("SH UHE");
+        } catch (IOException ex) {
+            // System.out.println("SH IOE");
+        }
         
-        Socket s = new Socket("10.100.1.239", 4466);
-        BufferedReader input
-                = new BufferedReader(new InputStreamReader(s.getInputStream()));
-        String answer = input.readLine();
-        JOptionPane.showMessageDialog(null, answer);
-        System.exit(0);
+        byte[] test = new byte[1024];
+        try {
+            this.incoming.read(test);
+        } catch (IOException ex) {
+            System.out.println("error");
+        }
+        System.out.println(test.length);
+        
+    }
+
+    public static void main(String[] args) throws IOException {
+        new RecieverClient();
     }
 }
