@@ -50,24 +50,6 @@ public class Packet {
         target = buffer.getInt();
     }
 
-    public byte[] paddPayload() {
-        ByteBuffer buffer = ByteBuffer.allocate(1004);
-        int counter = 0;
-        int toAdd = (1004 - this.payload.length);
-
-        byte[] toReturn = new byte[1004];
-        byte padding = 0;
-
-        buffer.put(this.payload);
-        for (int i = 0; i != (toAdd); i++) {
-            buffer.put(padding);
-            counter++;
-        }
-        buffer.flip();
-        buffer.get(toReturn);
-        return toReturn;
-    }
-
     public byte[] fillPacket(int toFill) {
         byte[] toReturn = new byte[4];
         ByteBuffer buffer = ByteBuffer.allocate(4);
