@@ -29,7 +29,10 @@ public class PacketSender {
         this.checksum = fillPacket((int) this.finalCheckSum.getValue());
 
     }
-
+    /**
+     * makes the packet from the info given
+     * @return 
+     */
     public byte[] makePacket() {
         byte[] toReturn = new byte[1024];
         ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -52,7 +55,10 @@ public class PacketSender {
         return toReturn;
 
     }
-    
+    /**
+     * pads the payload of the packet if it does not have 1004 bytes
+     * @return 
+     */
     public byte[] paddPayload(){
         ByteBuffer buffer = ByteBuffer.allocate(1004);
         int counter = 0;
@@ -70,7 +76,11 @@ public class PacketSender {
         buffer.get(toReturn);
         return toReturn;
     }
-
+    /**
+     * fills the packet with the reqired info
+     * @param toFill
+     * @return 
+     */
     public byte[] fillPacket(int toFill) {
         byte[] toReturn = new byte[4];
         ByteBuffer buffer = ByteBuffer.allocate(4);

@@ -15,17 +15,65 @@ public class Packet {
     private int srcPortNum;
     private int desPortNum;
     private int dataLength;
-    private byte[] payload = new byte[1004];
-
+    private byte[] payload;
+    
+    /**
+     * Makes a packet from the byte array given.
+     * @param pcktContents 
+     */
     public Packet(byte[] pcktContents) {
         breakPacket(pcktContents, this.seqNum);
         breakPacket(pcktContents, this.desPortNum);
         breakPacket(pcktContents, this.checksum);
         breakPacket(pcktContents, this.srcPortNum);
         breakPacket(pcktContents, this.dataLength);
+        this.payload = extractPayload(pcktContents);
     }
-
+    
+    public byte[] getPayload(){
+        return this.payload;
+    }
+    
+    public int getSeqNum(){
+        return this.seqNum;
+    }
+    
+    public int getCheckSum(){
+        return this.checksum;
+    }
+    
+    public int getDesPortNum(){
+        return this.desPortNum;
+    }
+    
+    public int getDataLength(){
+        return this.dataLength;
+    }
+    
+    public int getSrcPortNum(){
+        return this.srcPortNum;
+    }
+    /**
+     * extracts packets payload
+     * @param pcktContents
+     * @return 
+     */
+    public byte[] extractPayload(byte[] pcktContents){
+        int start = 21;
+        byte[] toReturn = new byte[this.dataLength];
+        for(int i = 0; i != dataLength;i++){
+            toReturn[i] = pcktContents[start];
+            start++;
+        }
+        return toReturn;
+    }
+    /**
+     * breaks a pakets header apart.
+     * @param pcktContents
+     * @param target 
+     */
     public void breakPacket(byte[] pcktContents, int target) {
+        
         int start;
         if (target == this.seqNum) {
             start = 0;
@@ -37,7 +85,7 @@ public class Packet {
             start = 12;
         } else {
             start = 16;
-        }
+        } 
 
         
         ByteBuffer buffer = ByteBuffer.allocate(4);
