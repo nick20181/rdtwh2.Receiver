@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 /**
  * Trivial client for the date server.
  */
-public class Client {
+public class RecieverClient {
 
     /**
      * Runs the client as an application. First it displays a dialog box asking
@@ -19,7 +19,7 @@ public class Client {
      */
     public static void main(String[] args) throws IOException {
         
-        Socket s = new Socket("10.100.128.95", 4466);
+        Socket s = new Socket("10.100.1.239", 4466);
         BufferedReader input
                 = new BufferedReader(new InputStreamReader(s.getInputStream()));
         String answer = input.readLine();
