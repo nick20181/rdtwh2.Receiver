@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
  * @author admin.dakota
  */
 public class SenderRunner {
-
     /**
      * @param args the command line arguments
      */
@@ -23,5 +22,6 @@ public class SenderRunner {
         test.sendCommand(pckt.makePacket());
         
     }
+    
     
 }

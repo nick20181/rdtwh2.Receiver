@@ -8,21 +8,26 @@ public class ReceiverClient {
 
     private Socket currentSocket;
     private InputStream incoming;
-    private PrintStream outGoing;
-    private byte[] toReturn;
 
     public ReceiverClient() {
         try {
             this.currentSocket = new Socket("10.15.1.21", 4467);
             //this.incoming = new DataInputStream(this.currentSocket.getInputStream());
             this.incoming = this.currentSocket.getInputStream();
-            this.outGoing = new PrintStream(this.currentSocket.getOutputStream());
         } catch (UnknownHostException e) {
             // System.out.println("SH UHE");
         } catch (IOException ex) {
             // System.out.println("SH IOE");
         }
 
+    }
+    
+    public void sendCommand(byte[] pckt) {
+        try {
+            this.currentSocket.getOutputStream().write(pckt);
+        } catch (IOException ex) {
+            System.out.println("SH IOE");
+        }
     }
 
     public byte[] getPckt() {
