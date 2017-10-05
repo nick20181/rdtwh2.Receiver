@@ -51,7 +51,7 @@ public class FileHandlerSender {
                 if (current + 1004 > FileContents.length) {
                     int counter = 0;
                     filler = new byte[(FileContents.length - current)];
-                    while (current != (FileContents.length - 1)) {
+                    while (current != (FileContents.length)) {
                         filler[counter] = FileContents[current];
                         counter++;
                         toReturn[i] = filler;
