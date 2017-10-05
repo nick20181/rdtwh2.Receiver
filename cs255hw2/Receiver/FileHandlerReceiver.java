@@ -17,10 +17,13 @@ public class FileHandlerReceiver {
 
     public void construct(byte[][] pckt) {
         int counter = 0;
-        File downloadFolder = new File("..");
+        File downloadFolder = new File("C:\\Users\\nick201\\Desktop\\cs255Hw2");
+        System.out.println(downloadFolder.getAbsolutePath());
+        
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(downloadFolder + "\\" + "testing.txt");
+            
             for (int i = 0; i != pckt.length; i++) {
                 counter = pckt[i].length + counter;
             }

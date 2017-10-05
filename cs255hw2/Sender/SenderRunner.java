@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
  *
  * @author admin.dakota
  */
-public class CS255HW2 {
+public class SenderRunner {
 
     /**
      * @param args the command line arguments
@@ -15,9 +15,12 @@ public class CS255HW2 {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         
         FileHandlerSender pish = new FileHandlerSender();
-        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\admin.dakota\\Desktop\\testing.txt"));
         
-        test.sendCommand(payloads[0]);
+        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nick201\\Desktop\\checksumtest.txt"));
+        PacketSender pckt = new PacketSender(0,4466,4467, payloads[0]); 
+        
+        
+        test.sendCommand(pckt.makePacket());
         
     }
     
