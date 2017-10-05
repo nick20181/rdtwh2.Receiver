@@ -59,9 +59,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.seqNum);
-            System.out.println("Current seqNum" + this.seqNum);
             buffer.clear();
-            System.out.println(this.seqNum);
         }
         if (currentByte <= 4) {
             for (int i = 0; i != 4; i++) {
@@ -70,9 +68,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.desPortNum);
-            System.out.println("Current desport" + this.desPortNum);
             buffer.clear();
-            System.out.println(this.desPortNum);
         }
         if (currentByte <= 8) {
             for (int i = 0; i != 4; i++) {
@@ -81,9 +77,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.checksum);
-            System.out.println("Current check" + this.checksum);
             buffer.clear();
-            System.out.println(this.checksum);
         }
         if (currentByte <= 12) {
             for (int i = 0; i != 4; i++) {
@@ -92,9 +86,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.srcPortNum);
-            System.out.println("Current srcport" + this.srcPortNum);
             buffer.clear();
-            System.out.println(this.srcPortNum);
         }
         if (currentByte <= 16) {
             for (int i = 0; i != 4; i++) {
@@ -103,9 +95,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.dataLength);
-            System.out.println("Current datal" + this.dataLength);
             buffer.clear();
-            System.out.println(this.dataLength);
         }
     }
 
