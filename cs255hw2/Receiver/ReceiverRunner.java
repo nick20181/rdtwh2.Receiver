@@ -19,7 +19,7 @@ public class ReceiverRunner {
         
         ReceiverClient client = new ReceiverClient();
         
-        PacketReceiver pckts = new PacketReceiver(client.getPckt());
+        Packet pckts = new Packet(client.getPckt());
         byte[][] a = new byte[1][];
         a[0] = pckts.getPayload();
         pish.construct(a);
