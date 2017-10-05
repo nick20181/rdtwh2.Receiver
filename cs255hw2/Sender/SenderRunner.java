@@ -15,7 +15,7 @@ public class SenderRunner {
         
         FileHandlerSender pish = new FileHandlerSender();
         
-        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\admin.dakota\\Desktop\\testing.txt"));
+        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nicholas.bohm\\Desktop\\test.txt"));
         Packet pckt = new Packet(0,4466,4467, payloads[0]); 
         
         
