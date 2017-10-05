@@ -22,7 +22,11 @@ public class ReceiverRunner {
         Packet pckts = new Packet(client.getPckt());
         byte[][] a = new byte[1][];
         a[0] = pckts.getPayload();
-        pish.construct(a);
+        if (pckts.notCorrupt()) {
+            pish.construct(a);
+        } else {
+            System.out.println("corrupted!");
+        }
         
     }
     

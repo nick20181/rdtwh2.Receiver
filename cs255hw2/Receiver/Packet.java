@@ -11,11 +11,11 @@ import java.nio.*;
 public class Packet {
 
     private CRC32 finalCheckSum = new CRC32();
-    private byte[] seqNum;
-    private byte[] checksum;
-    private byte[] srcPortNum;
-    private byte[] desPortNum;
-    private byte[] dataLength;
+    private byte[] seqNum = new byte[4];
+    private byte[] checksum = new byte[4];
+    private byte[] srcPortNum = new byte[4];
+    private byte[] desPortNum = new byte[4];
+    private byte[] dataLength = new byte[4];
     private byte[] payload = new byte[1004];
 
     public Packet(int seqNum, int srcPortNum, int desPortNum, byte[] payload) {
@@ -96,6 +96,21 @@ public class Packet {
             buffer.flip();
             buffer.get(this.dataLength);
             buffer.clear();
+        }
+    }
+    
+    public boolean notCorrupt() {
+        byte[] storeChecksum = this.checksum;
+        int receivedChecksum = this.getCheckSum();
+        this.checksum = fillPacket(0);
+        
+        this.finalCheckSum.update(makePacket());
+        if (receivedChecksum==this.finalCheckSum.getValue()){
+            this.checksum = storeChecksum;
+            return true;
+        } else {
+            this.checksum = storeChecksum;
+            return false;
         }
     }
 
