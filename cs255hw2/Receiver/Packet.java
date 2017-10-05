@@ -27,7 +27,7 @@ public class Packet {
         breakPacket(pcktContents, this.checksum);
         breakPacket(pcktContents, this.srcPortNum);
         breakPacket(pcktContents, this.dataLength);
-        this.payload = extractPayload(pcktContents);
+        extractPayload(pcktContents);
     }
     
     public byte[] getPayload(){
@@ -58,14 +58,15 @@ public class Packet {
      * @param pcktContents
      * @return 
      */
-    public byte[] extractPayload(byte[] pcktContents){
+    public void extractPayload(byte[] pcktContents){
+        ByteBuffer buffer = ByteBuffer.allocate(this.dataLength);
         int start = 21;
-        byte[] toReturn = new byte[this.dataLength];
         for(int i = 0; i != dataLength;i++){
-            toReturn[i] = pcktContents[start];
+            buffer.put(pcktContents[start]);
             start++;
         }
-        return toReturn;
+        buffer.flip();
+        buffer.get(this.payload);
     }
     /**
      * breaks a pakets header apart.
@@ -90,12 +91,24 @@ public class Packet {
         
         ByteBuffer buffer = ByteBuffer.allocate(4);
         //might break here
-        while(start!= (start+4)){
+        int a = start;
+        while(start != (a+4)){
             buffer.put(pcktContents[start]);
             start++;
         }
         buffer.flip();
-        target = buffer.getInt();
+
+        if (target == this.seqNum) {
+            this.seqNum = buffer.getInt();
+        } else if (target == this.desPortNum) {
+            this.desPortNum = buffer.getInt();
+        } else if (target == this.checksum) {
+            this.checksum = buffer.getInt();
+        } else if (target == this.srcPortNum) {
+            this.srcPortNum = buffer.getInt();
+        } else {
+            this.dataLength = buffer.getInt();
+        } 
     }
 
 }

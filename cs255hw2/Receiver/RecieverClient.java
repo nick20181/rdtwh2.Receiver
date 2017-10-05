@@ -11,6 +11,7 @@ public class RecieverClient {
     private Socket currentSocket;
     private DataInputStream incoming;
     private PrintStream outGoing;
+    private byte[] toReturn;
     
 
     public RecieverClient() {
@@ -31,8 +32,12 @@ public class RecieverClient {
         } catch (IOException ex) {
             System.out.println("error");
         }
-        System.out.println(test.length);
+        toReturn = test;
         
+    }
+    
+    public byte[] getToReturn() {
+        return this.toReturn;
     }
 
     public static void main(String[] args) throws IOException {

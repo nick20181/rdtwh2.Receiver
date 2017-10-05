@@ -20,7 +20,7 @@ public class FileHandlerReceiver {
         File downloadFolder = new File("..");
         FileOutputStream fos;
         try {
-            fos = new FileOutputStream(downloadFolder);
+            fos = new FileOutputStream(downloadFolder + "\\" + "testing.txt");
             for (int i = 0; i != pckt.length; i++) {
                 counter = pckt[i].length + counter;
             }
@@ -34,6 +34,7 @@ public class FileHandlerReceiver {
             fos.write(target);
         } catch (FileNotFoundException ex) {
             System.out.println("error");
+            ex.printStackTrace();
         } catch (IOException io) {
             System.out.println("error2");
         }
