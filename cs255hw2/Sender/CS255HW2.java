@@ -15,10 +15,9 @@ public class CS255HW2 {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         
         FileHandlerSender pish = new FileHandlerSender();
-        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nicholas.bohm\\Desktop\\cafe-javadoc.zip"));
-        PacketSender pckt1 = new PacketSender(0,4466,4467,payloads[0]);
-        byte[] pcktm = pckt1.makePacket();
-        test.sendCommand(pcktm);
+        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\admin.dakota\\Desktop\\testing.txt"));
+        
+        test.sendCommand(payloads[0]);
         
     }
     
