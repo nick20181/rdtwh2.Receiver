@@ -16,8 +16,8 @@ public class FileHandlerReceiver {
     }
 
     public void construct(byte[][] pckt) {
-        int counter = 0;
-        File downloadFolder = new File("C:\\Users\\nick201\\Desktop\\cs255Hw2");
+        int fileLength = 0;
+        File downloadFolder = new File("..");
         System.out.println(downloadFolder.getAbsolutePath());
         
         FileOutputStream fos;
@@ -25,11 +25,12 @@ public class FileHandlerReceiver {
             fos = new FileOutputStream(downloadFolder + "\\" + "testing.txt");
             
             for (int i = 0; i != pckt.length; i++) {
-                counter = pckt[i].length + counter;
+                fileLength = pckt[i].length + fileLength;
             }
-            byte[] target = new byte[counter];
-            ByteBuffer buffer = ByteBuffer.allocate(counter);
+            byte[] target = new byte[fileLength];
+            ByteBuffer buffer = ByteBuffer.allocate(fileLength);
             for (int i = 0; i != pckt.length; i++) {
+                System.out.println(i);
                 buffer.put(pckt[i]);
             }
             buffer.flip();
