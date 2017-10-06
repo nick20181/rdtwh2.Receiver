@@ -20,15 +20,52 @@ public class Packet {
 
     public Packet(int seqNum, int srcPortNum, int desPortNum, byte[] payload) {
         this.seqNum = fillPacket(seqNum);
-        this.checksum = fillPacket(0);
+        this.checksum = fillPacket(makeCheck());
         this.srcPortNum = fillPacket(srcPortNum);
         this.desPortNum = fillPacket(desPortNum);
         this.dataLength = fillPacket(payload.length);
         this.payload = payload;
         //creates the checksum of the completed packet
-        this.finalCheckSum.update(makePacket());
-        this.checksum = fillPacket((int) this.finalCheckSum.getValue());
 
+    }
+
+    /**
+     * Returns true if the file is not corrupt
+     *
+     * @return
+     */
+    public boolean notCorrupt() {
+        int receivedChecksum = this.getCheckSum(); 
+        int madeCheckSum = this.makeCheck();
+        System.out.println("Check sum sender: " + receivedChecksum);
+        System.out.println("Check sum Receiver: " + madeCheckSum);
+        if (receivedChecksum == (int) this.finalCheckSum.getValue()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int makeCheck() {
+        byte[] holder = new byte[1024];
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        //loads all fields into one byte array
+        buffer.put(this.seqNum);
+        buffer.put(this.desPortNum);
+        buffer.putInt(0);
+        buffer.put(this.srcPortNum);
+        buffer.put(this.dataLength);
+        if (this.payload.length != 1004) {
+            buffer.put(paddPayload());
+        } else {
+            buffer.put(this.payload);
+        }
+
+        buffer.flip();
+        //gets the packet out of the buffer
+        this.finalCheckSum.reset();
+        this.finalCheckSum.update(buffer);
+        return (int) this.finalCheckSum.getValue();
     }
 
     /**
@@ -98,62 +135,6 @@ public class Packet {
             buffer.clear();
         }
     }
-    
-    public boolean notCorrupt() {
-        byte[] storeChecksum = this.checksum;
-        int receivedChecksum = this.getCheckSum();
-        this.checksum = fillPacket(0);
-        this.finalCheckSum.reset();
-        this.finalCheckSum.update(makePacket());
-        System.out.println(receivedChecksum);
-        System.out.println(finalCheckSum.getValue());
-        if (receivedChecksum==this.finalCheckSum.getValue()){
-            this.checksum = storeChecksum;
-            return true;
-        } else {
-            this.checksum = storeChecksum;
-            return false;
-        }
-    }
-
-    public byte[] getPayload() {
-        return this.payload;
-    }
-
-    public int getSeqNum() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.seqNum);
-        buffer.flip();
-        return buffer.getInt();
-    }
-
-    public int getCheckSum() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.checksum);
-        buffer.flip();
-        return buffer.getInt();
-    }
-
-    public int getDesPortNum() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.desPortNum);
-        buffer.flip();
-        return buffer.getInt();
-    }
-
-    public int getDataLength() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.dataLength);
-        buffer.flip();
-        return buffer.getInt();
-    }
-
-    public int getSrcPortNum() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.srcPortNum);
-        buffer.flip();
-        return buffer.getInt();
-    }
 
     /**
      * extracts packets payload from raw recived packet
@@ -163,7 +144,6 @@ public class Packet {
      */
     public void extractPayload(byte[] pcktContents) {
         ByteBuffer buffer = ByteBuffer.allocate(this.getDataLength());
-        System.out.println(buffer.capacity());
         int start = 20;
         for (int i = 0; i != this.getDataLength(); i++) {
 
@@ -242,5 +222,44 @@ public class Packet {
         buffer.flip();
 
         return toReturn;
+    }
+
+    public byte[] getPayload() {
+        return this.payload;
+    }
+
+    public int getSeqNum() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.seqNum);
+        buffer.flip();
+        return buffer.getInt();
+    }
+
+    public int getCheckSum() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.checksum);
+        buffer.flip();
+        return buffer.getInt();
+    }
+
+    public int getDesPortNum() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.desPortNum);
+        buffer.flip();
+        return buffer.getInt();
+    }
+
+    public int getDataLength() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.dataLength);
+        buffer.flip();
+        return buffer.getInt();
+    }
+
+    public int getSrcPortNum() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.srcPortNum);
+        buffer.flip();
+        return buffer.getInt();
     }
 }

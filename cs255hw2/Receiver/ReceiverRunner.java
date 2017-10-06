@@ -21,6 +21,7 @@ public class ReceiverRunner {
         }
         FileHandlerReceiver dataHandler = new FileHandlerReceiver();
         ReceiverClient client = new ReceiverClient();
+        System.out.println("The Data Downloaded to: " + dataHandler.getDirectoryPath());
         Packet pcktOne = null;
         Packet pcktTwo = new Packet(1, 0, 0, NAK);;
         Packet pcktACK;
@@ -53,6 +54,7 @@ public class ReceiverRunner {
             while (run) {
                 pcktTwo = new Packet(client.getPckt());
                 System.out.println("Received2");
+                    System.out.println("Seq nums :" + pcktOne.getSeqNum() + ", " + pcktTwo.getSeqNum());
                 if (pcktOne.getSeqNum() != pcktTwo.getSeqNum()) {
                     if (pcktTwo.notCorrupt()) {
                         pcktACK = new Packet(pcktOne.getSeqNum(), pcktOne.getSrcPortNum(), client.getPort(), ACK);
@@ -71,6 +73,7 @@ public class ReceiverRunner {
                     client.sendCommand(pcktACK.makePacket());
                 }
             }
+            run = true;
         }
     }
 

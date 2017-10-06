@@ -21,7 +21,7 @@ public class SenderRunner {
         Packet ackTwo;
         SenderClient sender = new SenderClient();
         FileHandlerSender pish = new FileHandlerSender();
-        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nicholas.bohm\\Desktop\\cafe-javadoc.zip"));
+        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nick201\\Desktop\\JavaApplication2.7z"));
         for (int i = 0; i != payloads.length; i++) {
             while (run) {
                 System.out.println("Sending packet one");

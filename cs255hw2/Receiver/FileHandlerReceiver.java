@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class FileHandlerReceiver {
 
-    private File directory = new File("..");
+    private File directory = new File("C:\\Users\\nick201\\Desktop\\New folder");
     private FileOutputStream fos;
     private DataOutputStream dos;
 
