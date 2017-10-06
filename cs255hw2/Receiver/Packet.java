@@ -103,8 +103,10 @@ public class Packet {
         byte[] storeChecksum = this.checksum;
         int receivedChecksum = this.getCheckSum();
         this.checksum = fillPacket(0);
-        
+        this.finalCheckSum.reset();
         this.finalCheckSum.update(makePacket());
+        System.out.println(receivedChecksum);
+        System.out.println(finalCheckSum.getValue());
         if (receivedChecksum==this.finalCheckSum.getValue()){
             this.checksum = storeChecksum;
             return true;
