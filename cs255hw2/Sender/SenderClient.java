@@ -52,6 +52,10 @@ public class SenderClient {
             ex.printStackTrace();
         }
     }
+    
+    public Socket retrieveSocket(){
+        return this.currentSocket;
+    }
 
     public int getPort() {
         return this.currentSocket.getPort();

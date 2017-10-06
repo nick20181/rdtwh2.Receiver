@@ -1,5 +1,6 @@
 package cs255hw2.Sender;
 
+import cs255hw2.Sender.*;
 import java.util.zip.*;
 import java.nio.*;
 
@@ -10,11 +11,11 @@ import java.nio.*;
 public class Packet {
 
     private CRC32 finalCheckSum = new CRC32();
-    private byte[] seqNum;
-    private byte[] checksum;
-    private byte[] srcPortNum;
-    private byte[] desPortNum;
-    private byte[] dataLength;
+    private byte[] seqNum = new byte[4];
+    private byte[] checksum = new byte[4];
+    private byte[] srcPortNum = new byte[4];
+    private byte[] desPortNum = new byte[4];
+    private byte[] dataLength = new byte[4];
     private byte[] payload = new byte[1004];
 
     public Packet(int seqNum, int srcPortNum, int desPortNum, byte[] payload) {
@@ -58,9 +59,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.seqNum);
-            System.out.println("Current seqNum" + this.seqNum);
             buffer.clear();
-            System.out.println(this.seqNum);
         }
         if (currentByte <= 4) {
             for (int i = 0; i != 4; i++) {
@@ -69,9 +68,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.desPortNum);
-            System.out.println("Current desport" + this.desPortNum);
             buffer.clear();
-            System.out.println(this.desPortNum);
         }
         if (currentByte <= 8) {
             for (int i = 0; i != 4; i++) {
@@ -80,9 +77,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.checksum);
-            System.out.println("Current check" + this.checksum);
             buffer.clear();
-            System.out.println(this.checksum);
         }
         if (currentByte <= 12) {
             for (int i = 0; i != 4; i++) {
@@ -91,9 +86,7 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.srcPortNum);
-            System.out.println("Current srcport" + this.srcPortNum);
             buffer.clear();
-            System.out.println(this.srcPortNum);
         }
         if (currentByte <= 16) {
             for (int i = 0; i != 4; i++) {
@@ -102,19 +95,17 @@ public class Packet {
             }
             buffer.flip();
             buffer.get(this.dataLength);
-            System.out.println("Current datal" + this.dataLength);
             buffer.clear();
-            System.out.println(this.dataLength);
         }
     }
-
+    
     public boolean notCorrupt() {
         byte[] storeChecksum = this.checksum;
         int receivedChecksum = this.getCheckSum();
         this.checksum = fillPacket(0);
-
+        
         this.finalCheckSum.update(makePacket());
-        if (receivedChecksum == this.finalCheckSum.getValue()) {
+        if (receivedChecksum==this.finalCheckSum.getValue()){
             this.checksum = storeChecksum;
             return true;
         } else {

@@ -19,12 +19,17 @@ public class SenderRunner {
         Packet ackTwo;
         SenderClient sender = new SenderClient();
         FileHandlerSender pish = new FileHandlerSender();
-        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nicholas.bohm\\Desktop\\test.txt"));
+        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nicholas.bohm\\Desktop\\cafe-javadoc.zip"));
         for(int i = 0; i != payloads.length; i++){
             while(run){
             pcktOne = new Packet(0, 4467, sender.getPort(), payloads[i]);
             sender.sendCommand(pcktOne.makePacket());
-            ackOne = new Packet(sender.getPckt());
+            byte[] test = sender.getPckt();
+                System.out.println(test[0]);
+                System.out.println(test[1]);
+                System.out.println(test[2]);
+                System.out.println(test[3]);
+            ackOne = new Packet(test);
             
             if(ackOne.getSeqNum() == pcktOne.getSeqNum() && ackOne.notCorrupt()){
                 run = false;
@@ -52,14 +57,7 @@ public class SenderRunner {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SenderClient test = new SenderClient();
-        FileHandlerSender pish = new FileHandlerSender();
-        
-        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nicholas.bohm\\Desktop\\test.txt"));
-        Packet pckt = new Packet(0,4466,4467, payloads[0]); 
-        
-        
-        test.sendCommand(pckt.makePacket());
+        new SenderRunner();
         
     }
     
