@@ -216,7 +216,6 @@ public class Packet {
         buffer.get(toReturn);
         return toReturn;
     }
-
     /**
      * fills the packet with the reqired info
      *

@@ -20,8 +20,8 @@ public class ReceiverRunner {
         ReceiverClient client = new ReceiverClient();
         
         Packet pckts = new Packet(client.getPckt());
-        byte[][] a = new byte[1][];
-        a[0] = pckts.getPayload();
+        byte[] a = new byte[1];
+        a = pckts.getPayload();
         if (pckts.notCorrupt()) {
             pish.construct(a);
         } else {
