@@ -22,7 +22,7 @@ public class ReceiverRunner {
         FileHandlerReceiver dataHandler = new FileHandlerReceiver();
         ReceiverClient client = new ReceiverClient();
         Packet pcktOne = null;
-        Packet pcktTwo = null;
+        Packet pcktTwo = new Packet(1, 0, 0, NAK);;
         Packet pcktACK;
         //does not have nak info but name is used becuase lazy naming
         Packet pcktNAK;
