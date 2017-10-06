@@ -52,4 +52,9 @@ public class SenderClient {
             ex.printStackTrace();
         }
     }
+
+    public int getPort() {
+        return this.currentSocket.getPort();
+    }
+
 }

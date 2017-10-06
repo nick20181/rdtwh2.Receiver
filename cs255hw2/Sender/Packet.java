@@ -108,6 +108,21 @@ public class Packet {
         }
     }
 
+    public boolean notCorrupt() {
+        byte[] storeChecksum = this.checksum;
+        int receivedChecksum = this.getCheckSum();
+        this.checksum = fillPacket(0);
+
+        this.finalCheckSum.update(makePacket());
+        if (receivedChecksum == this.finalCheckSum.getValue()) {
+            this.checksum = storeChecksum;
+            return true;
+        } else {
+            this.checksum = storeChecksum;
+            return false;
+        }
+    }
+
     public byte[] getPayload() {
         return this.payload;
     }
@@ -216,6 +231,7 @@ public class Packet {
         buffer.get(toReturn);
         return toReturn;
     }
+
     /**
      * fills the packet with the reqired info
      *

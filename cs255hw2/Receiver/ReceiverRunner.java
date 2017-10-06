@@ -19,6 +19,7 @@ public class ReceiverRunner {
         for (int i = 0; i != 4; i++) {
             NAK[i] = 0;
         }
+        FileHandlerReceiver dataHandler = new FileHandlerReceiver();
         ReceiverClient client = new ReceiverClient();
         Packet pcktOne = null;
         Packet pcktTwo = null;
@@ -31,6 +32,7 @@ public class ReceiverRunner {
                 if (pcktOne.notCorrupt()) {
                     pcktACK = new Packet(pcktOne.getSeqNum(), pcktOne.getSrcPortNum(), client.getPort(), ACK);
                     client.sendCommand(pcktACK.makePacket());
+                    dataHandler.construct(pcktOne.getPayload());
                 } else {
                     pcktNAK = new Packet(pcktOne.getSeqNum(), pcktOne.getSrcPortNum(), client.getPort(), NAK);
                     client.sendCommand(pcktNAK.makePacket());
@@ -44,6 +46,7 @@ public class ReceiverRunner {
                 if (pcktTwo.notCorrupt()) {
                     pcktACK = new Packet(pcktOne.getSeqNum(), pcktOne.getSrcPortNum(), client.getPort(), ACK);
                     client.sendCommand(pcktACK.makePacket());
+                    dataHandler.construct(pcktTwo.getPayload());
                 } else {
                     pcktNAK = new Packet(pcktTwo.getSeqNum(), pcktTwo.getSrcPortNum(), client.getPort(), NAK);
                     client.sendCommand(pcktNAK.makePacket());

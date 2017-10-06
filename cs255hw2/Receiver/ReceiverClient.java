@@ -25,6 +25,7 @@ public class ReceiverClient {
     public int getPort(){
         return this.currentSocket.getPort();
     }
+    
     public void sendCommand(byte[] pckt) {
         try {
             this.currentSocket.getOutputStream().write(pckt);
