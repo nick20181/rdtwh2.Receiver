@@ -161,7 +161,6 @@ public class Packet {
      */
     public void extractPayload(byte[] pcktContents) {
         ByteBuffer buffer = ByteBuffer.allocate(this.getDataLength());
-        System.out.println(buffer.capacity());
         int start = 20;
         for (int i = 0; i != this.getDataLength(); i++) {
 

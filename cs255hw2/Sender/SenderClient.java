@@ -37,7 +37,6 @@ public class SenderClient {
         byte[] store = null;
         try {
             store = new byte[1024];
-            System.out.println("Waiting for pckt");
             this.incoming.read(store, 0, 1024);
         } catch (IOException ex) {
             ex.printStackTrace();
