@@ -20,13 +20,16 @@ public class Packet {
 
     public Packet(int seqNum, int srcPortNum, int desPortNum, byte[] payload) {
         this.seqNum = fillPacket(seqNum);
-        this.checksum = fillPacket(makeCheck());
+        this.checksum = fillPacket(0);
         this.srcPortNum = fillPacket(srcPortNum);
         this.desPortNum = fillPacket(desPortNum);
         this.dataLength = fillPacket(payload.length);
         this.payload = payload;
         //creates the checksum of the completed packet
-
+        this.finalCheckSum.reset();
+        this.finalCheckSum.update(this.makePacket());
+        this.checksum = fillPacket((int)this.finalCheckSum.getValue());
+        this.finalCheckSum.reset();
     }
 
     /**
@@ -35,19 +38,20 @@ public class Packet {
      * @return
      */
     public boolean notCorrupt() {
-        int receivedChecksum = this.getCheckSum(); 
-        int madeCheckSum = this.makeCheck();
-        System.out.println("Check sum sender: " + receivedChecksum);
-        System.out.println("Check sum Receiver: " + madeCheckSum);
-        if (receivedChecksum == (int) this.finalCheckSum.getValue()) {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.checksum);
+        buffer.flip();
+        int testCheck = buffer.getInt();
+        System.out.println("Checksum Sender: " + testCheck + " ReceiverChecksum :" + this.makeCheckRecieved());
+        if(testCheck == this.makeCheckRecieved()){
             return true;
         } else {
             return false;
         }
+        
     }
-
-    public int makeCheck() {
-        byte[] holder = new byte[1024];
+    
+    public int makeCheckRecieved() {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         //loads all fields into one byte array
         buffer.put(this.seqNum);

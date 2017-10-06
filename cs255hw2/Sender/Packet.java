@@ -1,5 +1,6 @@
 package cs255hw2.Sender;
 
+import cs255hw2.Receiver.*;
 import cs255hw2.Sender.*;
 import java.util.zip.*;
 import java.nio.*;
@@ -26,9 +27,50 @@ public class Packet {
         this.dataLength = fillPacket(payload.length);
         this.payload = payload;
         //creates the checksum of the completed packet
-        this.finalCheckSum.update(makePacket());
-        this.checksum = fillPacket((int) this.finalCheckSum.getValue());
+        this.finalCheckSum.reset();
+        this.finalCheckSum.update(this.makePacket());
+        this.checksum = fillPacket((int)this.finalCheckSum.getValue());
+        this.finalCheckSum.reset();
+    }
 
+     /**
+     * Returns true if the file is not corrupt
+     *
+     * @return
+     */
+    public boolean notCorrupt() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.checksum);
+        buffer.flip();
+        int testCheck = buffer.getInt();
+        System.out.println("Checksum Sender: " + testCheck + " ReceiverChecksum :" + this.makeCheckRecieved());
+        if(testCheck == this.makeCheckRecieved()){
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+
+    public int makeCheckRecieved() {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        //loads all fields into one byte array
+        buffer.put(this.seqNum);
+        buffer.put(this.desPortNum);
+        buffer.putInt(0);
+        buffer.put(this.srcPortNum);
+        buffer.put(this.dataLength);
+        if (this.payload.length != 1004) {
+            buffer.put(paddPayload());
+        } else {
+            buffer.put(this.payload);
+        }
+
+        buffer.flip();
+        //gets the packet out of the buffer
+        this.finalCheckSum.reset();
+        this.finalCheckSum.update(buffer);
+        return (int) this.finalCheckSum.getValue();
     }
 
     /**
@@ -97,60 +139,6 @@ public class Packet {
             buffer.get(this.dataLength);
             buffer.clear();
         }
-    }
-    
-    public boolean notCorrupt() {
-        byte[] storeChecksum = this.checksum;
-        int receivedChecksum = this.getCheckSum();
-        this.checksum = fillPacket(0);
-        
-        this.finalCheckSum.update(makePacket());
-        if (receivedChecksum==this.finalCheckSum.getValue()){
-            this.checksum = storeChecksum;
-            return true;
-        } else {
-            this.checksum = storeChecksum;
-            return false;
-        }
-    }
-
-    public byte[] getPayload() {
-        return this.payload;
-    }
-
-    public int getSeqNum() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.seqNum);
-        buffer.flip();
-        return buffer.getInt();
-    }
-
-    public int getCheckSum() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.checksum);
-        buffer.flip();
-        return buffer.getInt();
-    }
-
-    public int getDesPortNum() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.desPortNum);
-        buffer.flip();
-        return buffer.getInt();
-    }
-
-    public int getDataLength() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.dataLength);
-        buffer.flip();
-        return buffer.getInt();
-    }
-
-    public int getSrcPortNum() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.srcPortNum);
-        buffer.flip();
-        return buffer.getInt();
     }
 
     /**
@@ -239,5 +227,44 @@ public class Packet {
         buffer.flip();
 
         return toReturn;
+    }
+
+    public byte[] getPayload() {
+        return this.payload;
+    }
+
+    public int getSeqNum() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.seqNum);
+        buffer.flip();
+        return buffer.getInt();
+    }
+
+    public int getCheckSum() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.checksum);
+        buffer.flip();
+        return buffer.getInt();
+    }
+
+    public int getDesPortNum() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.desPortNum);
+        buffer.flip();
+        return buffer.getInt();
+    }
+
+    public int getDataLength() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.dataLength);
+        buffer.flip();
+        return buffer.getInt();
+    }
+
+    public int getSrcPortNum() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.srcPortNum);
+        buffer.flip();
+        return buffer.getInt();
     }
 }
