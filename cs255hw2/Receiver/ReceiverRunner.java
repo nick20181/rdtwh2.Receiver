@@ -32,39 +32,46 @@ public class ReceiverRunner {
 
         int currentSeq = 0;
         while (true) {
-                currentPckt = new Packet(client.getPckt());
-                //checks to see if the packet is the current seqNum the runner is on.
-                if (currentPckt.getSeqNum() == currentSeq) {
-                    //checks to see if the packt is corrupted.
-                    if(currentPckt.notCorrupt()){
-                        dataHandler.construct(currentPckt.getPayload());
-                        pcktACK = new Packet(currentPckt.getSeqNum(), port, currentPckt.getSrcPortNum(), ACK);
-                        System.out.println("CheckSum for Ack " + pcktACK.getSeqNum() + " :" + pcktACK.getCheckSum());
-                        
-                        System.out.println("Ack: " + pcktACK.getPayload() + " : " + ACK);
-                        client.sendCommand(pcktACK.makePacket());
-                        pcktACK = null;
-                        currentSeq++;
-                        prevPckt = currentPckt;
-                        currentPckt = null;
-                        //if courrupt sends a pckt back that is not a ack
-                    } else {
-                        pcktNAK = new Packet(currentPckt.getSeqNum(), port, currentPckt.getSrcPortNum(), NAK);
-                        System.out.println("Sent NAK for Packt: " + currentPckt.getSeqNum());
-                        client.sendCommand(pcktNAK.makePacket());
-                        pcktNAK = null;
-                    }
-                //sends the prevs pckts ack if recvied differnt seq nums
-                } else {
-                        pcktACK = new Packet(prevPckt.getSeqNum(), port, currentPckt.getSrcPortNum(), ACK);
-                        
-                        System.out.println("CheckSum for Ack " + pcktACK.getSeqNum() + " :" + pcktACK.getCheckSum());
-                        client.sendCommand(pcktACK.makePacket());
-                        pcktACK = null;
-                }
 
+            currentPckt = new Packet(client.getPckt());
+            //checks to see if the packet is the current seqNum the runner is on.
+//            if (currentPckt.getSeqNum() == currentSeq) {
+//                //checks to see if the packt is corrupted.
+                if (currentPckt.notCorrupt()) {
+                    dataHandler.construct(currentPckt.getPayload());
+                    pcktACK = new Packet(currentPckt.getSeqNum(), port, currentPckt.getSrcPortNum(), ACK);
+                    System.out.println("CheckSum for Ack " + pcktACK.getSeqNum() + " :" + pcktACK.getCheckSum());
+
+                    System.out.println("Ack: " + pcktACK.getPayload() + " : " + ACK);
+                    client.sendCommand(pcktACK.makePacket());
+                    pcktACK = null;
+                    if (currentSeq == 1) {
+                        currentSeq = 0;
+                    } else {
+                        currentSeq++;
+                    }
+                    prevPckt = currentPckt;
+                    currentPckt = null;
+                    //if courrupt sends a pckt back that is not a ack
+                } else {
+                    pcktNAK = new Packet(currentPckt.getSeqNum(), port, currentPckt.getSrcPortNum(), NAK);
+                    System.out.println("Sent NAK for Packt: " + currentPckt.getSeqNum());
+                    client.sendCommand(pcktNAK.makePacket());
+                    pcktNAK = null;
+                }
+                //sends the prevs pckts ack if recvied differnt seq nums
+//            } else {
+//                pcktACK = new Packet(prevPckt.getSeqNum(), port, currentPckt.getSrcPortNum(), ACK);
+//
+//                System.out.println("CheckSum for Ack " + pcktACK.getSeqNum() + " :" + pcktACK.getCheckSum());
+//                client.sendCommand(pcktACK.makePacket());
+//                pcktACK = null;
+//            }
+            if (currentSeq == 1) {
+                currentSeq = 0;
             }
-            
+        }
+
     }
 
     /**

@@ -24,7 +24,7 @@ public class SenderRunner {
         Packet currentAck;
         SenderClient sender = new SenderClient();
         FileHandlerSender pish = new FileHandlerSender();
-        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nick201\\Desktop\\JavaApplication2.7z"));
+        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nick201\\Desktop\\checksumtest.txt"));
         for (int i = 0; i != payloads.length; i++) {
 
             currentPckt = new Packet(currentSeq, sender.getPort(), desPort, payloads[i]);
@@ -38,7 +38,12 @@ public class SenderRunner {
                     System.out.println("recived Ack: " + currentAck.getPayload() + " Saved Ack: " + ACK);
                     if (this.getInt(currentAck.getPayload()) == this.getInt(ACK)) {
                         System.out.println("Ack recived!.");
-                        currentSeq++;
+                        if (currentSeq == 1) {
+                            currentSeq = 0;
+                        } else {
+                            currentSeq++;
+                        }
+                        
                         run = false;
                         prevPckt = currentPckt;
                         currentPckt = null;
@@ -64,8 +69,8 @@ public class SenderRunner {
         new SenderRunner();
 
     }
-    
-    public int getInt(byte[] data){
+
+    public int getInt(byte[] data) {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.put(data);
         buffer.flip();
