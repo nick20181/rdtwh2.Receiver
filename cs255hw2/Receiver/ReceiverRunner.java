@@ -7,25 +7,28 @@ package cs255hw2.Receiver;
 public class ReceiverRunner {
 
     public ReceiverRunner() {
+        //Varibles
         int port = 4467;
         boolean run = true;
         byte[] ACK = new byte[4];
-        for (int i = 0; i != 4; i++) {
-            ACK[i] = 1;
-        }
-        byte[] NAK = new byte[4];
-        for (int i = 0; i != 4; i++) {
-            NAK[i] = 0;
-        }
-        FileHandler dataHandler = new FileHandler();
-        ReceiverClient client = new ReceiverClient();
-        System.out.println("The Data Downloaded to: " + dataHandler.getDirectoryPath());
         Packet prevPckt = null;
         Packet currentPckt;
         Packet pcktACK;
         //does not have nak info but name is used becuase lazy naming
         Packet pcktNAK;
-
+        //Initlization of the byte array of the Ack.
+        for (int i = 0; i != 4; i++) {
+            ACK[i] = 1;
+        }
+//        byte[] NAK = new byte[4];
+//        for (int i = 0; i != 4; i++) {
+//            NAK[i] = 0;
+//        }
+        // Creation of needed Objects
+        FileHandler dataHandler = new FileHandler();
+        Client client = new Client();
+        System.out.println("The Data Downloaded to: " + dataHandler.getDirectoryPath());
+        
         int currentSeq = 0;
         while (true) {
 
@@ -50,7 +53,7 @@ public class ReceiverRunner {
                     currentPckt = null;
                     //if courrupt sends a pckt back that is not a ack
                 } else {
-                    pcktNAK = new Packet(currentPckt.getSeqNum(), port, currentPckt.getSrcPortNum(), NAK);
+                    pcktNAK = new Packet(currentPckt.getSeqNum(), port, currentPckt.getSrcPortNum());
                     System.out.println("Sent NAK for Packt: " + currentPckt.getSeqNum());
                     client.sendCommand(pcktNAK.makePacket());
                     pcktNAK = null;

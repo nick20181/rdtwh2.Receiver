@@ -6,7 +6,7 @@ import java.nio.*;
 /**
  *
  * @author Nicholas Bohm <your.name at your.org>
- * 
+ *
  */
 public class Packet {
 
@@ -33,6 +33,28 @@ public class Packet {
         this.desPortNum = fillPacket(desPortNum);
         this.dataLength = fillPacket(payload.length);
         this.payload = payload;
+        //creates the checksum of the completed packet
+        this.finalCheckSum.reset();
+        this.finalCheckSum.update(this.makePacket());
+        this.checksum = fillPacket((int) this.finalCheckSum.getValue());
+        this.finalCheckSum.reset();
+    }
+
+    /**
+     * Constructs a packet that has no payload
+     *
+     * @param seqNum
+     * @param srcPortNum
+     * @param desPortNum
+     * @param payload
+     */
+    public Packet(int seqNum, int srcPortNum, int desPortNum) {
+        this.seqNum = fillPacket(seqNum);
+        this.checksum = fillPacket(0);
+        this.srcPortNum = fillPacket(srcPortNum);
+        this.desPortNum = fillPacket(desPortNum);
+        this.dataLength = fillPacket(0);
+        this.payload[0] = (byte) 0;
         //creates the checksum of the completed packet
         this.finalCheckSum.reset();
         this.finalCheckSum.update(this.makePacket());
