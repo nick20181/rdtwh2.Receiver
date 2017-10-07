@@ -6,8 +6,7 @@ import java.io.*;
  *
  * @author Nicholas Bohm <your.name at your.org>
  * @author Dakota Vanwormer 
- * this class handles everything for both programs
- * depending on what is required.
+ * 
  */
 public class FileHandler {
 

@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 
 /**
  *
- * @author admin.dakota
+ * @author Dakota Vanwormer
  */
 public class SenderRunner {
 
