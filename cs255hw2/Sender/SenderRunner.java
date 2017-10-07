@@ -23,7 +23,7 @@ public class SenderRunner {
         Packet currentPckt;
         Packet currentAck;
         SenderClient sender = new SenderClient();
-        FileHandlerSender pish = new FileHandlerSender();
+        FileHandler pish = new FileHandler();
         byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nick201\\Desktop\\checksumtest.txt"));
         for (int i = 0; i != payloads.length; i++) {
 

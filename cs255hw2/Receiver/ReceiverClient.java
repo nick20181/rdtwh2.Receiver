@@ -2,7 +2,12 @@ package cs255hw2.Receiver;
 
 import java.io.*;
 import java.net.*;
-
+/**
+ * 
+ * @author Nicholas Bohm <your.name at your.org>
+ * @author Dakota Vanwormer
+ * 
+ */
 public class ReceiverClient {
 
     private Socket currentSocket;

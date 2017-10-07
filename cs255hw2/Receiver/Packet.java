@@ -1,12 +1,11 @@
 package cs255hw2.Receiver;
-
-import cs255hw2.Sender.*;
 import java.util.zip.*;
 import java.nio.*;
 
 /**
  *
  * @author Nicholas Bohm <your.name at your.org>
+ * 
  */
 public class Packet {
 
@@ -18,6 +17,14 @@ public class Packet {
     private byte[] dataLength = new byte[4];
     private byte[] payload = new byte[1004];
 
+    /**
+     * Constructs a packet out of manually inputted varaibles
+     *
+     * @param seqNum
+     * @param srcPortNum
+     * @param desPortNum
+     * @param payload
+     */
     public Packet(int seqNum, int srcPortNum, int desPortNum, byte[] payload) {
         this.seqNum = fillPacket(seqNum);
         this.checksum = fillPacket(0);
@@ -28,7 +35,7 @@ public class Packet {
         //creates the checksum of the completed packet
         this.finalCheckSum.reset();
         this.finalCheckSum.update(this.makePacket());
-        this.checksum = fillPacket((int)this.finalCheckSum.getValue());
+        this.checksum = fillPacket((int) this.finalCheckSum.getValue());
         this.finalCheckSum.reset();
     }
 
@@ -43,14 +50,19 @@ public class Packet {
         buffer.flip();
         int testCheck = buffer.getInt();
         System.out.println("Checksum Sender: " + testCheck + " ReceiverChecksum :" + this.makeCheckRecieved());
-        if(testCheck == this.makeCheckRecieved()){
+        if (testCheck == this.makeCheckRecieved()) {
             return true;
         } else {
             return false;
         }
-        
+
     }
-    
+
+    /**
+     * makes a check sum from a packet with a checksum of zero in the packet.
+     *
+     * @return
+     */
     public int makeCheckRecieved() {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         //loads all fields into one byte array
@@ -84,7 +96,7 @@ public class Packet {
     }
 
     /**
-     * breaks a pakets header apart from raw pckt.
+     * breaks a packets header apart from raw packet.
      *
      * @param pcktContents
      * @param target
@@ -228,10 +240,20 @@ public class Packet {
         return toReturn;
     }
 
+    /**
+     * gets the payload of the packet
+     *
+     * @return
+     */
     public byte[] getPayload() {
         return this.payload;
     }
 
+    /**
+     * gets the sequence number of the packet
+     *
+     * @return
+     */
     public int getSeqNum() {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.put(this.seqNum);
@@ -239,6 +261,11 @@ public class Packet {
         return buffer.getInt();
     }
 
+    /**
+     * gets the checksum that is saved in the packet
+     *
+     * @return
+     */
     public int getCheckSum() {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.put(this.checksum);
@@ -246,6 +273,11 @@ public class Packet {
         return buffer.getInt();
     }
 
+    /**
+     * gets the destenation port number of the packet
+     *
+     * @return
+     */
     public int getDesPortNum() {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.put(this.desPortNum);
@@ -253,6 +285,11 @@ public class Packet {
         return buffer.getInt();
     }
 
+    /**
+     * gets the data length of the payload
+     *
+     * @return
+     */
     public int getDataLength() {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.put(this.dataLength);
@@ -260,6 +297,11 @@ public class Packet {
         return buffer.getInt();
     }
 
+    /**
+     * gets the source port of the packet
+     *
+     * @return
+     */
     public int getSrcPortNum() {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.put(this.srcPortNum);

@@ -1,12 +1,8 @@
 package cs255hw2.Receiver;
 
-import cs255hw2.Sender.*;
-import java.io.*;
-import java.nio.ByteBuffer;
-
 /**
- *
- * @author admin.dakota
+ * @author Nicholas Bohm
+ * @author Dakota Vanwormer
  */
 public class ReceiverRunner {
 
@@ -21,7 +17,7 @@ public class ReceiverRunner {
         for (int i = 0; i != 4; i++) {
             NAK[i] = 0;
         }
-        FileHandlerReceiver dataHandler = new FileHandlerReceiver();
+        FileHandler dataHandler = new FileHandler();
         ReceiverClient client = new ReceiverClient();
         System.out.println("The Data Downloaded to: " + dataHandler.getDirectoryPath());
         Packet prevPckt = null;
