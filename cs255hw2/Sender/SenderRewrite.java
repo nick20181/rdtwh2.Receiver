@@ -27,10 +27,9 @@ public class SenderRewrite {
         boolean run = true;
         ClientRewrite client = new ClientRewrite(ip, srcPort);
 
-        DataHandlerRewrite dataHandler = new DataHandlerRewrite();
-        dataHandler.setDirectory(directory);
+        DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory);
         int fileSize = (payLoadSize / (int) dataHandler.getFileToSend(fileName).length()) + 1;
-        for (int i = 0; i < fileSize; i++) {
+        for (int i = 0; i <= 13; i++) {
             byte[] currentPayload = dataHandler.FileToByte(fileName, payLoadSize);
             current = new PacketRewrite(seqNum, 0, srcPort, desPort, currentPayload);
             System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())
@@ -57,6 +56,7 @@ public class SenderRewrite {
                     client.sendPacket(current.makePckt());
                 }
             }
+            run = true;
         }
     }
 

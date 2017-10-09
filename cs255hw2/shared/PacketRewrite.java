@@ -65,10 +65,10 @@ public class PacketRewrite {
         CRC32 crc32 = new CRC32();
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         //loads all fields into one byte array
-        buffer.put(this.seqNum);
-        buffer.put(this.desPortNum);
+        buffer.put(this.seqNum); 
         buffer.putInt(0);
         buffer.put(this.srcPortNum);
+        buffer.put(this.desPortNum);
         buffer.put(this.dataLength);
         if (this.payload.length != 1004) {
             buffer.put(paddPayLoad(this.payload));
@@ -170,9 +170,9 @@ public class PacketRewrite {
         byte[] toReturn = new byte[1024];
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         buffer.put(this.seqNum);
+        buffer.put(this.checkSum);
         buffer.put(this.srcPortNum);
         buffer.put(this.desPortNum);
-        buffer.put(this.checkSum);
         buffer.put(this.dataLength);
         buffer.put(this.payload);
         buffer.flip();

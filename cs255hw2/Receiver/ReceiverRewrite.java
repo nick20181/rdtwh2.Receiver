@@ -17,9 +17,7 @@ public class ReceiverRewrite {
         String ip = "10.15.1.21";
         int srcPort = 4467;
         int desPort = 4466;
-        String fileName = "test.txt";
         String directory = "..";
-        int payLoadSize = 1004;
         PacketRewrite current;
         PacketRewrite prev;
         PacketRewrite ACK;
@@ -27,8 +25,7 @@ public class ReceiverRewrite {
         boolean run = true;
         ClientRewrite client = new ClientRewrite(ip, srcPort);
 
-        DataHandlerRewrite dataHandler = new DataHandlerRewrite();
-        dataHandler.setDirectory(directory);
+        DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory);
         while (true) {
             current = new PacketRewrite(client.receivePckt());
             System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())

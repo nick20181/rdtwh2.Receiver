@@ -7,6 +7,8 @@ package cs255hw2.shared;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,8 +22,18 @@ public class DataHandlerRewrite {
     private ByteArrayOutputStream baos;
 
     //this.fos = new FileOutputStream(this.directory + fileName);
+    public DataHandlerRewrite(String directory) {
+        this.setDirectory(directory);
+        try {
+            this.fos = new FileOutputStream(this.directory + "\\retrived.data");
+            this.baos = new ByteArrayOutputStream();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DataHandlerRewrite.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public DataHandlerRewrite() {
-
+       
     }
 
     public File getFileToSend(String fileName) {
@@ -30,8 +42,7 @@ public class DataHandlerRewrite {
 
     public void ByteToFile(byte[] data) {
         try {
-            this.fos = new FileOutputStream(this.directory + "\\retrived.data");
-            this.baos = new ByteArrayOutputStream();
+
             this.baos.write(data);
             this.baos.writeTo(fos);
         } catch (IOException ex) {
