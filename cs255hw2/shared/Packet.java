@@ -1,4 +1,4 @@
-package cs255hw2.Receiver;
+package cs255hw2.shared;
 
 import java.util.zip.*;
 import java.nio.*;

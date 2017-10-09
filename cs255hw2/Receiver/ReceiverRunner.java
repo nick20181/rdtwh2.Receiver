@@ -1,11 +1,11 @@
 package cs255hw2.Receiver;
 
+import cs255hw2.shared.*;
 /**
  * @author Nicholas Bohm
  * @author Dakota Vanwormer
  */
 public class ReceiverRunner {
-
     public ReceiverRunner() {
         //Varibles
         int port = 4467;
@@ -25,7 +25,7 @@ public class ReceiverRunner {
 //            NAK[i] = 0;
 //        }
         // Creation of needed Objects
-        FileHandler dataHandler = new FileHandler();
+        DataHandler dataHandler = new DataHandler("C:\\Users\\nicholas.bohm\\Desktop\\New folder");
         Client client = new Client();
         System.out.println("The Data Downloaded to: " + dataHandler.getDirectoryPath());
         
@@ -72,12 +72,35 @@ public class ReceiverRunner {
         }
 
     }
+    
+    public ReceiverRunner(boolean t) {
+        String ip = "10.15.1.21";
+        int srcPort = 4467;
+        String fileName = "testing.txt";
+        int payLoadSize = 1004;
+        
+        ClientRewrite client = new ClientRewrite(ip, srcPort);
+        
+        DataHandlerRewrite dataHandler = new DataHandlerRewrite();
+        dataHandler.setDirectory("C:\\Users\\nicholas.bohm\\Desktop\\retrived");
+        
+        PacketRewrite packet = new PacketRewrite(client.receivePckt());
+        System.out.println("seqNum: " + dataHandler.byteToInt(packet.getSeqNum()));
+        System.out.println("srcPort: " + dataHandler.byteToInt(packet.getSrcPort()));
+        System.out.println("desPort: " + dataHandler.byteToInt(packet.getDesPort()));
+        System.out.println("checkSum: " + dataHandler.byteToInt(packet.getCheckSum()));
+        System.out.println("dataLength: " + dataHandler.byteToInt(packet.getDataLength()));
+        
+        dataHandler.ByteToFile(packet.getPayload());
+        
+
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new ReceiverRunner();
+        new ReceiverRunner(true);
 
     }
 

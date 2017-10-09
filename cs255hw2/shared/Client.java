@@ -1,4 +1,4 @@
-package cs255hw2.Sender;
+package cs255hw2.shared;
 
 import java.io.*;
 
@@ -12,7 +12,7 @@ import java.net.*;
 public class Client {
 
     private Socket currentSocket;
-    private DataInputStream incoming;
+    private ByteArrayInputStream incoming;
 
     public Client() {
         try {
@@ -46,7 +46,8 @@ public class Client {
         byte[] store = null;
         try {
             store = new byte[1024];
-            this.incoming.read(store, 0, 1024);
+            int test = this.incoming.read(store);
+            System.out.println("Sized Saved: " + test);
         } catch (IOException ex) {
         }
         return store;

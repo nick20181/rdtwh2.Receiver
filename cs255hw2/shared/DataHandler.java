@@ -1,4 +1,4 @@
-package cs255hw2.Sender;
+package cs255hw2.shared;
 
 import java.io.*;
 
@@ -8,7 +8,7 @@ import java.io.*;
  * @author Dakota Vanwormer 
  * 
  */
-public class FileHandler {
+public class DataHandler {
 
     private File directory;
     private FileOutputStream fos;
@@ -19,7 +19,7 @@ public class FileHandler {
      *
      * @param pathFile
      */
-    public FileHandler(String pathFile) {
+    public DataHandler(String pathFile) {
         this.directory = new File(pathFile);
         try {
             this.fos = new FileOutputStream(this.directory + "\\Received.data");
@@ -60,7 +60,7 @@ public class FileHandler {
     /**
      * This constructor is for the sender.
      */
-    public FileHandler() {
+    public DataHandler() {
 
     }
 
