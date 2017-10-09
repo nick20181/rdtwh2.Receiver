@@ -26,8 +26,12 @@ public class DataHandlerRewrite {
     public DataHandlerRewrite() {
 
     }
-    
-    public void ByteToFile(byte[] data){
+
+    public File getFileToSend(String fileName) {
+        return new File(this.directory + "\\" + fileName);
+    }
+
+    public void ByteToFile(byte[] data) {
         try {
             this.fos = new FileOutputStream(this.directory + "\\retrived.data");
             this.baos = new ByteArrayOutputStream();
