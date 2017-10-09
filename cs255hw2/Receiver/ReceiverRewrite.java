@@ -18,6 +18,7 @@ public class ReceiverRewrite {
         int srcPort = 4467;
         int desPort = 4466;
         String directory = "..";
+        String fileName = "";
         PacketRewrite current;
         PacketRewrite prev;
         PacketRewrite ACK;

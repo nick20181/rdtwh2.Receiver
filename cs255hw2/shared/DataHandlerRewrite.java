@@ -27,13 +27,23 @@ public class DataHandlerRewrite {
         try {
             this.fos = new FileOutputStream(this.directory + "\\retrived.data");
             this.baos = new ByteArrayOutputStream();
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DataHandlerRewrite.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    public DataHandlerRewrite(String directory, String fileName) {
+        try {
+            this.setDirectory(directory);
+            this.fis = new FileInputStream(this.directory + "\\" + fileName);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DataHandlerRewrite.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public DataHandlerRewrite() {
-       
+
     }
 
     public File getFileToSend(String fileName) {
@@ -45,6 +55,7 @@ public class DataHandlerRewrite {
 
             this.baos.write(data);
             this.baos.writeTo(fos);
+            this.baos.reset();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -54,7 +65,6 @@ public class DataHandlerRewrite {
         int counter = 0;
         byte[][] store = new byte[size][1];
         try {
-            this.fis = new FileInputStream(this.directory + "\\" + fileName);
             for (int i = 0; i < store.length; i++) {
                 if (this.fis.read(store[i], 0, 1) != -1) {
                     counter++;

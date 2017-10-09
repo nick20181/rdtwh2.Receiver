@@ -27,7 +27,7 @@ public class SenderRewrite {
         boolean run = true;
         ClientRewrite client = new ClientRewrite(ip, srcPort);
 
-        DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory);
+        DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory, fileName);
         int fileSize = (payLoadSize / (int) dataHandler.getFileToSend(fileName).length()) + 1;
         for (int i = 0; i <= 13; i++) {
             byte[] currentPayload = dataHandler.FileToByte(fileName, payLoadSize);
@@ -57,6 +57,8 @@ public class SenderRewrite {
                 }
             }
             run = true;
+            currentPayload = null;
+            
         }
     }
 
