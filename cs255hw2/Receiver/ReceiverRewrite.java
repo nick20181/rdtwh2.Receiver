@@ -31,7 +31,7 @@ public class ReceiverRewrite {
             current = new PacketRewrite(client.receivePckt());
             System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())
                     + " desPort: " + dataHandler.byteToInt(current.getDesPort()) + " datalength: " + dataHandler.byteToInt(current.getDataLength()));
-            if (current.notCorrupt()) {
+            if (current.notCorrupt() && seqNum==dataHandler.byteToInt(current.getSeqNum())) {
                 dataHandler.ByteToFile(current.getPayload());
                 ACK = new PacketRewrite(seqNum, 0, srcPort, desPort, dataHandler.intToByte(1, 4));
                 System.out.println("CheckSum for Ack " + ACK.getSeqNum() + " :" + ACK.getCheckSum());
@@ -48,7 +48,7 @@ public class ReceiverRewrite {
                 current = null;
                 //if courrupt sends a pckt back that is not a ack
             } else {
-                ACK = new PacketRewrite(seqNum, 0, srcPort, desPort, dataHandler.intToByte(1, 0));
+                ACK = new PacketRewrite(seqNum, 0, srcPort, desPort, dataHandler.intToByte(0, 4));
                 System.out.println("Sent NAK for Packt: " + current.getSeqNum());
                 client.sendPacket(ACK.makePckt());
                 ACK = null;
