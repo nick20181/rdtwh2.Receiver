@@ -5,11 +5,8 @@
  */
 package cs255hw2.shared;
 
-import java.io.DataOutputStream;
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

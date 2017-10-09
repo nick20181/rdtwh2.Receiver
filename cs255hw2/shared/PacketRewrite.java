@@ -22,7 +22,7 @@ public class PacketRewrite {
     private byte[] dataLength = new byte[4];
     private byte[] payload = new byte[1004];
 
-    public PacketRewrite(int seqNum, int srcPort, int desPort, int checkSum, byte[] payLoad) {
+    public PacketRewrite(int seqNum, int checkSum, int srcPort, int desPort,  byte[] payLoad) {
         fillHeader(this.seqNum, seqNum);
         fillHeader(this.srcPortNum, srcPort);
         fillHeader(this.desPortNum, desPort);
@@ -35,6 +35,52 @@ public class PacketRewrite {
         }
         fillHeader(this.checkSum, this.createChecksum());
 
+    }
+    
+    /**
+     * Returns true if the file is not corrupt
+     *
+     * @return
+     */
+    public boolean notCorrupt() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.put(this.checkSum);
+        buffer.flip();
+        int testCheck = buffer.getInt();
+        System.out.println("Checksum Sender: " + testCheck + " ReceiverChecksum :" + this.makeCheckRecieved());
+        if (testCheck == this.makeCheckRecieved()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * makes a check sum from a packet with a checksum of zero in the packet.
+     *
+     * @return
+     */
+    public int makeCheckRecieved() {
+        CRC32 crc32 = new CRC32();
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        //loads all fields into one byte array
+        buffer.put(this.seqNum);
+        buffer.put(this.desPortNum);
+        buffer.putInt(0);
+        buffer.put(this.srcPortNum);
+        buffer.put(this.dataLength);
+        if (this.payload.length != 1004) {
+            buffer.put(paddPayLoad(this.payload));
+        } else {
+            buffer.put(this.payload);
+        }
+
+        buffer.flip();
+        //gets the packet out of the buffer
+        
+        crc32.update(buffer);
+        return (int) crc32.getValue();
     }
 
     public PacketRewrite(byte[] pckt) {
@@ -68,7 +114,7 @@ public class PacketRewrite {
                 currentByte++;
             }
             buffer.flip();
-            buffer.get(this.srcPortNum);
+            buffer.get(this.checkSum);
             buffer.clear();
             
         }
@@ -78,7 +124,7 @@ public class PacketRewrite {
                 currentByte++;
             }
             buffer.flip();
-            buffer.get(this.desPortNum);
+            buffer.get(this.srcPortNum);
             buffer.clear();
             
         }
@@ -88,7 +134,7 @@ public class PacketRewrite {
                 currentByte++;
             }
             buffer.flip();
-            buffer.get(this.checkSum);
+            buffer.get(this.desPortNum);
             buffer.clear();
         }
         if (currentByte <= 16) {

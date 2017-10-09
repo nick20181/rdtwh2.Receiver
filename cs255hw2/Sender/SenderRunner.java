@@ -29,7 +29,7 @@ public class SenderRunner {
         Client client = new Client();
         DataHandler pish = new DataHandler();
         //the file that is broken up into payload segments.
-        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\nicholas.bohm\\Desktop\\send\\testing.txt"));
+        byte[][] payloads = pish.packetPayloadAssembler(new File("C:\\Users\\TEMP\\Desktop\\test.txt"));
         for (int i = 0; i != payloads.length; i++) {
             
             currentPckt = new Packet(currentSeq, client.getPort(), desPort, payloads[i]);
@@ -95,7 +95,7 @@ public class SenderRunner {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new SenderRunner(true);
+        new SenderRunner();
         
     }
     
