@@ -38,14 +38,14 @@ public class SenderRewrite {
             while (run) {
                 ACK = new PacketRewrite(client.receivePckt());
                 System.out.println("Ack Checksum: " + ACK.getCheckSum() + "SystemCheckSum: " + ACK.notCorrupt());
-                if (ACK.notCorrupt()) {
+                if (ACK.notCorrupt() && dataHandler.byteToInt(ACK.getPayload()) == 1) {
                     System.out.println("recived Ack: " + ACK.getPayload() + " Saved Ack: " + ACK);
                     //iftimeout
                     System.out.println("Ack recived!.");
                     if (seqNum == 1) {
                         seqNum = 0;
                     } else {
-                        seqNum++;
+                        seqNum = 0;
                     }
 
                     run = false;
