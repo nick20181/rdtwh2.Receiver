@@ -22,7 +22,7 @@ public class PacketRewrite {
     private byte[] dataLength = new byte[4];
     private byte[] payload = new byte[1004];
 
-    public PacketRewrite(int seqNum, int checkSum, int srcPort, int desPort,  byte[] payLoad) {
+    public PacketRewrite(int seqNum, int checkSum, int srcPort, int desPort, byte[] payLoad) {
         fillHeader(this.seqNum, seqNum);
         fillHeader(this.srcPortNum, srcPort);
         fillHeader(this.desPortNum, desPort);
@@ -36,7 +36,7 @@ public class PacketRewrite {
         fillHeader(this.checkSum, this.createChecksum());
 
     }
-    
+
     /**
      * Returns true if the file is not corrupt
      *
@@ -47,7 +47,7 @@ public class PacketRewrite {
         buffer.put(this.checkSum);
         buffer.flip();
         int testCheck = buffer.getInt();
-        System.out.println("Checksum Sender: " + testCheck + " ReceiverChecksum :" + this.makeCheckRecieved());
+//        System.out.println("Checksum Sender: " + testCheck + " ReceiverChecksum :" + this.makeCheckRecieved());
         if (testCheck == this.makeCheckRecieved()) {
             return true;
         } else {
@@ -65,7 +65,7 @@ public class PacketRewrite {
         CRC32 crc32 = new CRC32();
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         //loads all fields into one byte array
-        buffer.put(this.seqNum); 
+        buffer.put(this.seqNum);
         buffer.putInt(0);
         buffer.put(this.srcPortNum);
         buffer.put(this.desPortNum);
@@ -78,13 +78,14 @@ public class PacketRewrite {
 
         buffer.flip();
         //gets the packet out of the buffer
-        
+
         crc32.update(buffer);
         return (int) crc32.getValue();
     }
 
     public PacketRewrite(byte[] pckt) {
         breakPacket(pckt);
+//        System.out.println("packtretwerret: " + this.dataHandler.byteToInt(getDataLength()));
         this.payload = new byte[this.dataHandler.byteToInt(getDataLength())];
         extractPayload(pckt);
     }
@@ -116,7 +117,7 @@ public class PacketRewrite {
             buffer.flip();
             buffer.get(this.checkSum);
             buffer.clear();
-            
+
         }
         if (currentByte <= 8) {
             for (int i = 0; i != 4; i++) {
@@ -126,7 +127,7 @@ public class PacketRewrite {
             buffer.flip();
             buffer.get(this.srcPortNum);
             buffer.clear();
-            
+
         }
         if (currentByte <= 12) {
             for (int i = 0; i != 4; i++) {
@@ -156,6 +157,7 @@ public class PacketRewrite {
      */
     public void extractPayload(byte[] pcktContents) {
         ByteBuffer buffer = ByteBuffer.allocate(this.dataHandler.byteToInt(getDataLength()));
+//        System.out.println("test: " + this.dataHandler.byteToInt(getDataLength()));
         int start = 20;
         for (int i = 0; i != dataHandler.byteToInt(getDataLength()); i++) {
 

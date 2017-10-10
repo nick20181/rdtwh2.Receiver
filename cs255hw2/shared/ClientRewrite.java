@@ -7,8 +7,6 @@ package cs255hw2.shared;
 
 import java.io.*;
 import java.net.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -17,13 +15,13 @@ import java.util.logging.Logger;
 public class ClientRewrite {
 
     private Socket socket;
-    private InputStream Input;
+    private InputStream input;
     private OutputStream output;
 
     public ClientRewrite(String ip, int port) {
         try {
             this.socket = new Socket(ip, port);
-            this.Input = this.socket.getInputStream();
+            this.input = this.socket.getInputStream();
             this.output = this.socket.getOutputStream();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -43,10 +41,14 @@ public class ClientRewrite {
     public byte[] receivePckt() {
         byte[] toReturn = new byte[1024];
         try {
-            this.Input.read(toReturn);
+            this.input.read(toReturn);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         return toReturn;
+    }
+    
+    public InputStream getInput(){
+        return this.input;
     }
 }

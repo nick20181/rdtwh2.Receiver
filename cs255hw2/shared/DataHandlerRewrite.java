@@ -7,8 +7,6 @@ package cs255hw2.shared;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +27,6 @@ public class DataHandlerRewrite {
             this.baos = new ByteArrayOutputStream();
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(DataHandlerRewrite.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -38,7 +35,6 @@ public class DataHandlerRewrite {
             this.setDirectory(directory);
             this.fis = new FileInputStream(this.directory + "\\" + fileName);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(DataHandlerRewrite.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -46,8 +42,10 @@ public class DataHandlerRewrite {
 
     }
 
-    public File getFileToSend(String fileName) {
-        return new File(this.directory + "\\" + fileName);
+    public long getFileLength(String fileName) {
+        File hold = new File(this.directory + "\\" + fileName);
+//        System.out.println("hold: " + hold.length());
+        return hold.length();
     }
 
     public void ByteToFile(byte[] data) {
@@ -65,7 +63,7 @@ public class DataHandlerRewrite {
         int counter = 0;
         byte[][] store = new byte[size][1];
         try {
-            for (int i = 0; i < store.length; i++) {
+            for (int i = 0; i < size; i++) {
                 if (this.fis.read(store[i], 0, 1) != -1) {
                     counter++;
                 }
@@ -74,12 +72,9 @@ public class DataHandlerRewrite {
             for (int i = 0; i < counter; i++) {
                 toReturn[i] = store[i][0];
             }
-            System.out.println(" ");
             return toReturn;
         } catch (FileNotFoundException ex) {
-            System.out.println("error in FileToByte - ex");
         } catch (IOException io) {
-            System.out.println("error in FileToByte - io");
         }
         return null;
     }
