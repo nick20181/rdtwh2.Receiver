@@ -51,7 +51,7 @@ public class SenderRewrite {
                             ACK = new PacketRewrite(client.receivePckt());
                             timeout = false;
                         }
-                        if (((System.currentTimeMillis() / 1000) - timeStart) >= 3) {
+                        else if (((System.currentTimeMillis() / 1000) - timeStart) >= 3) {
 //                            System.out.println("Timeout");
                             client.sendPacket(current.makePckt());
                             timeStart = (System.currentTimeMillis() / 1000);
