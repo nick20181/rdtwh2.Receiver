@@ -11,6 +11,8 @@ import java.io.IOException;
 /**
  *
  * @author Nicholas Bohm <your.name at your.org>
+ * 
+ * http://10.15.1.21/RDT-Four.log
  */
 public class SenderRewrite {
 
