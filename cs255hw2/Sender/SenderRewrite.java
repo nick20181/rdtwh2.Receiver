@@ -53,14 +53,14 @@ public class SenderRewrite {
                             ACK = null;
                             recived = client.receivePckt();
                             if (current.notCorrupt(recived)) {
-                                ACK = new PacketRewrite(client.receivePckt());
+                                ACK = new PacketRewrite(recived);
                                 timeout = false;
                             } else {
                                 System.out.println("corrupted");
                                 client.sendPacket(current.makePckt());
                                 timeStart = (System.currentTimeMillis() / 1000);
                             }
-                        } else if (((System.currentTimeMillis() / 1000) - timeStart) >= 30) {
+                        } else if (((System.currentTimeMillis() / 1000) - timeStart) >= 3) {
                             System.out.println("Timeout");
                             client.sendPacket(current.makePckt());
                             timeStart = (System.currentTimeMillis() / 1000);
