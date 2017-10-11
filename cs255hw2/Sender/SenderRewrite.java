@@ -39,31 +39,31 @@ public class SenderRewrite {
         for (int i = 0; i <= fileSize; i++) {
             byte[] currentPayload = dataHandler.FileToByte(fileName, payLoadSize);
             current = new PacketRewrite(seqNum, 0, srcPort, desPort, currentPayload);
-//            System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())
-//                    + " desPort: " + dataHandler.byteToInt(current.getDesPort()) + " datalength: " + dataHandler.byteToInt(current.getDataLength()));
+            System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())                    + " desPort: " + dataHandler.byteToInt(current.getDesPort()) + " datalength: " + dataHandler.byteToInt(current.getDataLength()));
             client.sendPacket(current.makePckt());
             while (run) {
                 try {
                     timeStart = (System.currentTimeMillis() / 1000);
-//                    System.out.println("Time start: " + timeStart);
+                    System.out.println("Time start: " + timeStart);
                     while (timeout) {
+                        System.out.println("drop?: " + (1024 == client.getInput().available()));
                         if (1024 == client.getInput().available()) {
                             ACK = new PacketRewrite(client.receivePckt());
                             timeout = false;
                         }
                         else if (((System.currentTimeMillis() / 1000) - timeStart) >= 3) {
-//                            System.out.println("Timeout");
+                            System.out.println("Timeout");
                             client.sendPacket(current.makePckt());
                             timeStart = (System.currentTimeMillis() / 1000);
                             drops++;
                         }
                     }
-
-//                    System.out.println("Ack Checksum: " + dataHandler.byteToInt(ACK.getCheckSum()) + "SystemCheckSum: " + ACK.notCorrupt());
+                    timeout = true;
+                  System.out.println("Ack Checksum: " + dataHandler.byteToInt(ACK.getCheckSum()) + "SystemCheckSum: " + ACK.notCorrupt());
                     if (ACK.notCorrupt() && dataHandler.byteToInt(ACK.getPayload()) == 1) {
                         System.out.println("recived Ack: " + ACK.getPayload() + " Saved Ack: " + ACK);
                         //iftimeout
-//                        System.out.println("Ack recived!.");
+                       System.out.println("Ack recived!.");
                         if (seqNum == 1) {
                             seqNum = 0;
                         } else {
@@ -73,10 +73,11 @@ public class SenderRewrite {
                         run = false;
                         prev = current;
                         current = null;
-                        corrupts++;
+                        ACK = null;
                     } else {
-//                        System.out.println("Nak Recived!");
+                       System.out.println("Nak Recived!");
                         client.sendPacket(current.makePckt());
+                        ACK = null;
                     }
                 } catch (IOException ex) {
                 }
