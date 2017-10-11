@@ -40,54 +40,78 @@ public class PacketRewrite {
     /**
      * Returns true if the file is not corrupt
      *
+     * @param pckt
      * @return
      */
-    public boolean notCorrupt() {
+    public boolean notCorrupt(byte[] pckt) {
+        CRC32 crc32 = new CRC32();
+        int recivedChecksum;
+        int start = 4;
+        int end = 7;
         ByteBuffer buffer = ByteBuffer.allocate(4);
-        buffer.put(this.checkSum);
+        for (int i = 0; i < 4; i++) {
+            buffer.put(pckt[start]);
+            start++;
+        }
         buffer.flip();
-        int testCheck = buffer.getInt();
-//        System.out.println("Checksum Sender: " + testCheck + " ReceiverChecksum :" + this.makeCheckRecieved());
-        if (testCheck == this.makeCheckRecieved()) {
+        recivedChecksum = buffer.getInt();
+        buffer.clear();
+        start = 4;
+        for (int i = 0; i < 4; i++) {
+            pckt[start] = 0;
+        }
+        crc32.update(pckt);
+        if ((int) crc32.getValue() == recivedChecksum) {
             return true;
         } else {
             return false;
         }
 
+//        ByteBuffer buffer = ByteBuffer.allocate(4);
+//        buffer.put(this.checkSum);
+//        buffer.flip();
+//        int testCheck = buffer.getInt();
+////        System.out.println("Checksum Sender: " + testCheck + " ReceiverChecksum :" + this.makeCheckRecieved());
+//        if (testCheck == this.makeCheckRecieved()) {
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 
-    /**
-     * makes a check sum from a packet with a checksum of zero in the packet.
-     *
-     * @return
-     */
-    public int makeCheckRecieved() {
-        CRC32 crc32 = new CRC32();
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        //loads all fields into one byte array
-        buffer.put(this.seqNum);
-        buffer.putInt(0);
-        buffer.put(this.srcPortNum);
-        buffer.put(this.desPortNum);
-        buffer.put(this.dataLength);
-        if (this.payload.length != 1004) {
-            buffer.put(paddPayLoad(this.payload));
-        } else {
-            buffer.put(this.payload);
-        }
-
-        buffer.flip();
-        //gets the packet out of the buffer
-
-        crc32.update(buffer);
-        return (int) crc32.getValue();
-    }
-
+//    /**
+//     * makes a check sum from a packet with a checksum of zero in the packet.
+//     *
+//     * @return
+//     */
+//    public int makeCheckRecieved() {
+//        CRC32 crc32 = new CRC32();
+//        ByteBuffer buffer = ByteBuffer.allocate(1024);
+//        //loads all fields into one byte array
+//        buffer.put(this.seqNum);
+//        buffer.putInt(0);
+//        buffer.put(this.srcPortNum);
+//        buffer.put(this.desPortNum);
+//        buffer.put(this.dataLength);
+//        if (this.payload.length != 1004) {
+//            buffer.put(paddPayLoad(this.payload));
+//        } else {
+//            buffer.put(this.payload);
+//        }
+//
+//        buffer.flip();
+//        //gets the packet out of the buffer
+//
+//        crc32.update(buffer);
+//        return (int) crc32.getValue();
+//    }
     public PacketRewrite(byte[] pckt) {
+
         breakPacket(pckt);
 //        System.out.println("packtretwerret: " + this.dataHandler.byteToInt(getDataLength()));
         this.payload = new byte[this.dataHandler.byteToInt(getDataLength())];
         extractPayload(pckt);
+
     }
 
     /**

@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  *
  * @author Nicholas Bohm <your.name at your.org>
- * 
+ *
  * http://10.15.1.21/RDT-Four.log
  */
 public class SenderRewrite {
@@ -33,13 +33,14 @@ public class SenderRewrite {
         int seqNum = 0;
         boolean run = true;
         ClientRewrite client = new ClientRewrite(ip, srcPort);
+        byte[] recived;
 
         DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory, fileName);
         long fileSize = (dataHandler.getFileLength(fileName) / payLoadSize) + 1;
         for (int i = 0; i <= fileSize; i++) {
             byte[] currentPayload = dataHandler.FileToByte(fileName, payLoadSize);
             current = new PacketRewrite(seqNum, 0, srcPort, desPort, currentPayload);
-            System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())                    + " desPort: " + dataHandler.byteToInt(current.getDesPort()) + " datalength: " + dataHandler.byteToInt(current.getDataLength()));
+            System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort()) + " desPort: " + dataHandler.byteToInt(current.getDesPort()) + " datalength: " + dataHandler.byteToInt(current.getDataLength()));
             client.sendPacket(current.makePckt());
             while (run) {
                 try {
@@ -50,10 +51,16 @@ public class SenderRewrite {
                         if (1024 == client.getInput().available()) {
                             System.out.println("recived ack");
                             ACK = null;
-                            ACK = new PacketRewrite(client.receivePckt());
-                            timeout = false;
-                        }
-                        else if (((System.currentTimeMillis() / 1000) - timeStart) >= 30) {
+                            recived = client.receivePckt();
+                            if (current.notCorrupt(recived)) {
+                                ACK = new PacketRewrite(client.receivePckt());
+                                timeout = false;
+                            } else {
+                                System.out.println("corrupted");
+                                client.sendPacket(current.makePckt());
+                                timeStart = (System.currentTimeMillis() / 1000);
+                            }
+                        } else if (((System.currentTimeMillis() / 1000) - timeStart) >= 30) {
                             System.out.println("Timeout");
                             client.sendPacket(current.makePckt());
                             timeStart = (System.currentTimeMillis() / 1000);
@@ -61,23 +68,23 @@ public class SenderRewrite {
                         }
                     }
                     timeout = true;
-                  System.out.println("Ack Checksum: " + dataHandler.byteToInt(ACK.getCheckSum()) + "SystemCheckSum: " + ACK.notCorrupt());
-                    if (ACK.notCorrupt() && dataHandler.byteToInt(ACK.getPayload()) == 1) {
+                    System.out.println("Ack Checksum: " + dataHandler.byteToInt(ACK.getCheckSum()));
+                    if (dataHandler.byteToInt(ACK.getPayload()) == 1) {
                         System.out.println("recived Ack: " + ACK.getPayload() + " Saved Ack: " + ACK);
                         //iftimeout
-                       System.out.println("Ack recived!.");
+                        System.out.println("Ack recived!.");
                         if (seqNum == 1) {
                             seqNum = 0;
                         } else {
-                            seqNum ++;
+                            seqNum++;
                         }
 
                         run = false;
                         prev = current;
                         current = null;
-                        
+
                     } else {
-                       System.out.println("Nak Recived!");
+                        System.out.println("Nak Recived!");
                         client.sendPacket(current.makePckt());
                     }
                 } catch (IOException ex) {

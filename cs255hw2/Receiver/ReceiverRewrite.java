@@ -18,38 +18,42 @@ public class ReceiverRewrite {
         int srcPort = 4467;
         int desPort = 4466;
         String directory = "..";
-        PacketRewrite current;
- 
+
         PacketRewrite ACK;
         int seqNum = 0;
         boolean run = true;
         ClientRewrite client = new ClientRewrite(ip, srcPort);
-
-        DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory);       
+        DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory);
         PacketRewrite prev = new PacketRewrite(2, 0, srcPort, desPort, dataHandler.intToByte(0, 4));
+        PacketRewrite current = new PacketRewrite(0, 0, srcPort, desPort, dataHandler.intToByte(0, 4));
+        byte[] recived;
         while (true) {
-            current = new PacketRewrite(client.receivePckt());
-            System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())
-                    + " desPort: " + dataHandler.byteToInt(current.getDesPort()) + " datalength: " + dataHandler.byteToInt(current.getDataLength()));
-            System.out.println(dataHandler.byteToInt(current.getCheckSum()) + "SeqNum.. " + dataHandler.byteToInt(current.getSeqNum()));
-            if (current.notCorrupt()) {
+            recived = null;
+            recived = client.receivePckt();
+            if (current.notCorrupt(recived)) {
+                current = new PacketRewrite(recived);
+
+                System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())
+                        + " desPort: " + dataHandler.byteToInt(current.getDesPort()) + " datalength: " + dataHandler.byteToInt(current.getDataLength()));
+                System.out.println(dataHandler.byteToInt(current.getCheckSum()) + "SeqNum.. " + dataHandler.byteToInt(current.getSeqNum()));
+
                 if (seqNum == dataHandler.byteToInt(current.getSeqNum())) {
 
-                dataHandler.ByteToFile(current.getPayload());
-                ACK = new PacketRewrite(seqNum, 0, srcPort, desPort, dataHandler.intToByte(1, 4));
-                System.out.println("CheckSum for Ack " + dataHandler.byteToInt(ACK.getSeqNum()) + " :" + dataHandler.byteToInt(ACK.getCheckSum()));
+                    dataHandler.ByteToFile(current.getPayload());
+                    ACK = new PacketRewrite(seqNum, 0, srcPort, desPort, dataHandler.intToByte(1, 4));
+                    System.out.println("CheckSum for Ack " + dataHandler.byteToInt(ACK.getSeqNum()) + " :" + dataHandler.byteToInt(ACK.getCheckSum()));
 
-                System.out.println("Ack: " + ACK.getPayload() + " : " + ACK);
-                client.sendPacket(ACK.makePckt());
-                ACK = null;
-                if (seqNum == 1) {
-                    seqNum = 0;
-                } else {
-                    seqNum++;
-                }
-                prev = current;
-                current = null;
-                //if courrupt sends a pckt back that is not a ack
+                    System.out.println("Ack: " + ACK.getPayload() + " : " + ACK);
+                    client.sendPacket(ACK.makePckt());
+                    ACK = null;
+                    if (seqNum == 1) {
+                        seqNum = 0;
+                    } else {
+                        seqNum++;
+                    }
+                    prev = current;
+                    current = null;
+                    //if courrupt sends a pckt back that is not a ack
                 } else {
                     ACK = new PacketRewrite(dataHandler.byteToInt(prev.getSeqNum()), 0, srcPort, desPort, dataHandler.intToByte(1, 4));
                     client.sendPacket(ACK.makePckt());
