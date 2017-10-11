@@ -1,6 +1,6 @@
-package cs255hw2.Receiver;
+package cs255hw2Receiver;
 
-import cs255hw2.shared.*;
+
 
 /**
  *

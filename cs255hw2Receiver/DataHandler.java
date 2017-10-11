@@ -1,5 +1,6 @@
-package cs255hw2.shared;
+package cs255hw2Receiver;
 
+import cs255hw2.shared.*;
 import java.io.*;
 import java.nio.ByteBuffer;
 
