@@ -33,6 +33,7 @@ public class ClientRewrite {
     public void sendPacket(byte[] pckt) {
         try {
             this.output.write(pckt);
+            this.output.flush();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -42,6 +43,7 @@ public class ClientRewrite {
         byte[] toReturn = new byte[1024];
         try {
             this.input.read(toReturn);
+            this.input.reset();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
