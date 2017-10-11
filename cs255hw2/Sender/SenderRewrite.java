@@ -46,12 +46,14 @@ public class SenderRewrite {
                     timeStart = (System.currentTimeMillis() / 1000);
                     System.out.println("Time start: " + timeStart);
                     while (timeout) {
-                        System.out.println("drop?: " + (1024 == client.getInput().available()));
+                        //System.out.println("drop?: " + (1024 == client.getInput().available()));
                         if (1024 == client.getInput().available()) {
+                            System.out.println("recived ack");
+                            ACK = null;
                             ACK = new PacketRewrite(client.receivePckt());
                             timeout = false;
                         }
-                        else if (((System.currentTimeMillis() / 1000) - timeStart) >= 3) {
+                        else if (((System.currentTimeMillis() / 1000) - timeStart) >= 30) {
                             System.out.println("Timeout");
                             client.sendPacket(current.makePckt());
                             timeStart = (System.currentTimeMillis() / 1000);
@@ -73,11 +75,10 @@ public class SenderRewrite {
                         run = false;
                         prev = current;
                         current = null;
-                        ACK = null;
+                        
                     } else {
                        System.out.println("Nak Recived!");
                         client.sendPacket(current.makePckt());
-                        ACK = null;
                     }
                 } catch (IOException ex) {
                 }
