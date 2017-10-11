@@ -59,6 +59,7 @@ public class PacketRewrite {
         start = 4;
         for (int i = 0; i < 4; i++) {
             pckt[start] = 0;
+            start++;
         }
         crc32.update(pckt);
         if ((int) crc32.getValue() == recivedChecksum) {

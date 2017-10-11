@@ -31,6 +31,7 @@ public class ReceiverRewrite {
             recived = null;
             recived = client.receivePckt();
             if (current.notCorrupt(recived)) {
+                current = null;
                 current = new PacketRewrite(recived);
 
                 System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort())
@@ -52,7 +53,6 @@ public class ReceiverRewrite {
                         seqNum++;
                     }
                     prev = current;
-                    current = null;
                     //if courrupt sends a pckt back that is not a ack
                 } else {
                     ACK = new PacketRewrite(dataHandler.byteToInt(prev.getSeqNum()), 0, srcPort, desPort, dataHandler.intToByte(1, 4));
