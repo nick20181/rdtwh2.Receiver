@@ -14,16 +14,14 @@ import java.nio.ByteBuffer;
  */
 public class DataHandlerRewrite {
 
-    private File directory;
     private FileOutputStream fos;
     private FileInputStream fis;
     private ByteArrayOutputStream baos;
 
     //this.fos = new FileOutputStream(this.directory + fileName);
     public DataHandlerRewrite(String directory) {
-        this.setDirectory(directory);
         try {
-            this.fos = new FileOutputStream(this.directory + "\\retrived.data");
+            this.fos = new FileOutputStream(directory);
             this.baos = new ByteArrayOutputStream();
 
         } catch (FileNotFoundException ex) {
@@ -32,8 +30,7 @@ public class DataHandlerRewrite {
 
     public DataHandlerRewrite(String directory, String fileName) {
         try {
-            this.setDirectory(directory);
-            this.fis = new FileInputStream(this.directory + "\\" + fileName);
+            this.fis = new FileInputStream(directory);
         } catch (FileNotFoundException ex) {
         }
     }
@@ -43,7 +40,7 @@ public class DataHandlerRewrite {
     }
 
     public long getFileLength(String fileName) {
-        File hold = new File(this.directory + "\\" + fileName);
+        File hold = new File(fileName);
 //        System.out.println("hold: " + hold.length());
         return hold.length();
     }
@@ -95,9 +92,5 @@ public class DataHandlerRewrite {
         buffer.flip();
         buffer.get(dst);
         return dst;
-    }
-
-    public void setDirectory(String path) {
-        this.directory = new File(path);
     }
 }

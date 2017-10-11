@@ -16,14 +16,13 @@ import java.io.IOException;
  */
 public class SenderRewrite {
 
-    public SenderRewrite() {
+    public SenderRewrite(String[] file) {
         int drops = 0;
         int corrupts = 0;
         String ip = "10.15.1.21";
         int srcPort = 4466;
         int desPort = 4467;
-        String fileName = "test.txt";
-        String directory = "C:\\Users\\nicholas.bohm\\Desktop\\send";
+        String directory = file[0];
         int payLoadSize = 1004;
         PacketRewrite current;
         PacketRewrite prev;
@@ -35,10 +34,10 @@ public class SenderRewrite {
         ClientRewrite client = new ClientRewrite(ip, srcPort);
         byte[] recived;
 
-        DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory, fileName);
-        long fileSize = (dataHandler.getFileLength(fileName) / payLoadSize) + 1;
+        DataHandlerRewrite dataHandler = new DataHandlerRewrite(directory);
+        long fileSize = (dataHandler.getFileLength(directory) / payLoadSize) + 1;
         for (int i = 0; i <= fileSize; i++) {
-            byte[] currentPayload = dataHandler.FileToByte(fileName, payLoadSize);
+            byte[] currentPayload = dataHandler.FileToByte(directory, payLoadSize);
             current = new PacketRewrite(seqNum, 0, srcPort, desPort, currentPayload);
             System.out.println("Packet: " + seqNum + " CheckSum: " + dataHandler.byteToInt(current.getCheckSum()) + " srcPort: " + dataHandler.byteToInt(current.getSrcPort()) + " desPort: " + dataHandler.byteToInt(current.getDesPort()) + " datalength: " + dataHandler.byteToInt(current.getDataLength()));
             client.sendPacket(current.makePckt());
@@ -100,8 +99,9 @@ public class SenderRewrite {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        new SenderRewrite();
+    public static void main(String[] file) {
+        new SenderRewrite(file);
 
     }
+    
 }
