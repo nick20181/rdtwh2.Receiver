@@ -158,6 +158,7 @@ public class PacketRewrite {
     public void extractPayload(byte[] pcktContents) {
         ByteBuffer buffer = ByteBuffer.allocate(this.dataHandler.byteToInt(getDataLength()));
 //        System.out.println("test: " + this.dataHandler.byteToInt(getDataLength()));
+        System.out.println("buffer size: " + buffer.capacity());
         int start = 20;
         for (int i = 0; i != dataHandler.byteToInt(getDataLength()); i++) {
 
